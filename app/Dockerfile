@@ -1,11 +1,29 @@
-FROM node:18-alpine
+# syntax=docker/dockerfile:1
 
+ARG NODE_VERSION=18.0.0
+
+FROM node:${NODE_VERSION}-alpine as base
 WORKDIR /app
+EXPOSE 3000
 
-COPY package.json yarn.lock ./
 
-RUN yarn install --production
+FROM base as dev
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci --include=dev
 
+RUN yarn install
 COPY . .
+CMD [ "yarn", "run", "dev" ]
 
-CMD ["node", "src/index.js"]
+
+FROM base as prod
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev
+
+RUN yarn install
+COPY . .
+CMD [ "node", "/src/index.js" ]
