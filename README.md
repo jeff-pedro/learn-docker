@@ -32,7 +32,15 @@ mysql:8.0
 ```
  
 ### [Docker Compose]()
--
+- run unit tests
+```shell
+docker compose run app yarn run test
+```
+
+- run test during image is built
+```shell
+
+```
  
 ### Docker Swarm
 - ...
