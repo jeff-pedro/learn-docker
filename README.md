@@ -32,6 +32,9 @@ mysql:8.0
 ```
  
 ### [Docker Compose]()
+
+**Tests**
+
 - run unit tests
 ```shell
 docker compose run app yarn run test
@@ -39,7 +42,7 @@ docker compose run app yarn run test
 
 - run test during image is built
 ```shell
-
+docker build -t node-docker-image-test --progress=plain --no-cache --target test .
 ```
  
 ### Docker Swarm
